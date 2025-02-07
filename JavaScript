@@ -1,0 +1,19 @@
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = "ur-PK";
+recognition.interimResults = false;
+
+function startListening() {
+    recognition.start();
+    document.getElementById("output").innerText = "سن رہا ہوں...";
+}
+
+recognition.onresult = function(event) {
+    let speech = event.results[0][0].transcript;
+    document.getElementById("output").innerText = "آپ نے کہا: " + speech;
+
+    fetch("https://your-server-url.onrender.com/setMeeting", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ command: speech })
+    });
+};
